@@ -45,3 +45,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Files added by me
+.o
+.exe
+# specific files added that may need to be removed later
+2048AI.depend
+2048AI.layout
+2048AI.cbp
