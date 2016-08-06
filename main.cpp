@@ -15,6 +15,7 @@ int main()
     Board board;
     ControlerFactory factory;
     Controler* controler = factory.GetControler();
+    board.DisplayBoard();
     cout << "Hello world!" << endl;
     return 0;
 }
