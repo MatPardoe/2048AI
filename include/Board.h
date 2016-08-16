@@ -11,6 +11,7 @@ class Board
         Board(int currentBoard[4][4], int currentScore);
         //functions
         int GetScore();
+        void Move(Direction direction);
         void MakeMove(Direction direction);
         bool CanMakeMove(Direction direction);
         bool CanMakeAMove();

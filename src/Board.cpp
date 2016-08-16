@@ -45,9 +45,41 @@ int Board::GetScore()
     return score;
 }
 
+void Board::Move(Direction direction)
+{
+    MakeMove(direction);
+    int x = rand()%4;
+    int y = rand()%4;
+    while(board[x][y] != 0)
+    {
+        x = rand()%4;
+        y = rand()%4;
+    }
+    if (rand()%10) //using chance from actual game of 1 in 10 for it to be a four
+    {
+        board[x][y] = 4;
+        return;
+    }
+    board[x][y] = 2;
+}
+
 void Board::MakeMove(Direction direction)
 {
-    throw "not yet implemented";
+    switch (direction)
+    {
+    case Up:
+        MakeUpMove();
+        break;
+    case Right:
+        MakeRightMove();
+        break;
+    case Down:
+        MakeDownMove();
+        break;
+    case Left:
+        MakeLeftMove();
+        break;
+    }
 }
 
 bool Board::CanMakeMove(Direction direction)
