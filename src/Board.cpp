@@ -4,7 +4,7 @@
 
 #include "Board.h"
 
-
+// constructors
 
 Board::Board()
 {
@@ -17,7 +17,39 @@ Board::Board()
             board[i][j] = 0;
         }
     }
+
+
+    int x = rand()%4;
+    int y = rand()%4;
+    while(board[x][y] != 0)
+    {
+        x = rand()%4;
+        y = rand()%4;
+    }
+    if (rand()%10 == 1) //using chance from actual game of 1 in 10 for it to be a four
+    {
+        board[x][y] = 4;
+    }
+    else
+    {
+        board[x][y] = 2;
+    }
+    while(board[x][y] != 0)
+    {
+        x = rand()%4;
+        y = rand()%4;
+    }
+    if (rand()%10 == 1) //using chance from actual game of 1 in 10 for it to be a four
+    {
+        board[x][y] = 4;
+    }
+    else
+    {
+        board[x][y] = 2;
+    }
+
     score = 0;
+    moves = 0;
     time_t seconds;
     time(&seconds);
     srand((unsigned int) seconds);
@@ -40,6 +72,8 @@ Board::Board(int currentBoard[4][4], int currentScore)
     srand((unsigned int) seconds);
 }
 
+//public methods
+
 int Board::GetScore()
 {
     return score;
@@ -47,7 +81,12 @@ int Board::GetScore()
 
 void Board::Move(Direction direction)
 {
+    if (!CanMakeMove(direction))
+    {
+        return;
+    }
     MakeMove(direction);
+    moves++;
     int x = rand()%4;
     int y = rand()%4;
     while(board[x][y] != 0)
@@ -55,7 +94,7 @@ void Board::Move(Direction direction)
         x = rand()%4;
         y = rand()%4;
     }
-    if (rand()%10) //using chance from actual game of 1 in 10 for it to be a four
+    if (rand()%10 == 1) //using chance from actual game of 1 in 10 for it to be a four
     {
         board[x][y] = 4;
         return;
@@ -140,12 +179,17 @@ void Board::AddTile(int i, int j, int value)
     board[i][j] = value;
 }
 
+int Board::GetBoard(int i, int j)
+{
+    return board[i][j];
+}
+
 int Board::EndGame()
 {
     throw "not yet implemented";
 }
 
-// here onwards private functions
+// private methods
 
 bool Board::CanMakeUpMove()
 {
@@ -281,20 +325,128 @@ bool Board::CanMakeLeftMove()
 
 void Board::MakeUpMove()
 {
-    throw "not yet implemented";
+    for (int i = 0; i < 4; i++)
+    {
+        // combine the tiles that are the same and next to each other
+        for (int j = 0; j < 3; j++)
+        {
+            if (board[j][i] != 0 && board[j+1][i] == board[j][i])
+            {
+                board[j][i] = 2*board[j][i];
+                score = score + board[j][i];
+                board[j+1][i] = 0;
+            }
+        }
+        // sliding the tiles across as expected
+        for (int j = 1; j < 4; j++)
+        {
+            if (board[j][i] != 0)
+            {
+                for (int k = j; k > 0; k--)
+                {
+                    if (board[k-1][i] == 0)
+                    {
+                        board[k-1][i] = board[k][i];
+                        board[k][i] = 0;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Board::MakeRightMove()
 {
-    throw "not yet implemented";
+    for (int i = 0; i < 4; i++)
+    {
+        // combine the tiles that are the same and next to each other
+        for (int j = 3; j > 0; j--)
+        {
+            if (board[i][j] != 0 && board[i][j-1] == board[i][j])
+            {
+                board[i][j] = 2*board[i][j];
+                score = score + board[i][j];
+                board[i][j-1] = 0;
+            }
+        }
+        // sliding the tiles across as expected
+        for (int j = 2; j > -1; j--)
+        {
+            if (board[i][j] != 0)
+            {
+                for (int k = j; k < 3; k++)
+                {
+                    if (board[i][k+1] == 0)
+                    {
+                        board[i][k+1] = board[i][k];
+                        board[i][k] = 0;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Board::MakeDownMove()
 {
-    throw "not yet implemented";
+    for (int i = 0; i < 4; i++)
+    {
+        // combine the tiles that are the same and next to each other
+        for (int j = 3; j > 0; j--)
+        {
+            if (board[j][i] != 0 && board[j-1][i] == board[j][i])
+            {
+                board[j][i] = 2*board[j][i];
+                score = score + board[j][i];
+                board[j-1][i] = 0;
+            }
+        }
+        // sliding the tiles across as expected
+        for (int j = 2; j > -1; j--)
+        {
+            if (board[j][i] != 0)
+            {
+                for (int k = j; k < 3; k++)
+                {
+                    if (board[k+1][i] == 0)
+                    {
+                        board[k+1][i] = board[k][i];
+                        board[k][i] = 0;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Board::MakeLeftMove()
 {
-    throw "not yet implemented";
+    for (int i = 0; i < 4; i++)
+    {
+        // combine the tiles that are the same and next to each other
+        for (int j = 0; j < 3; j++)
+        {
+            if (board[i][j] != 0 && board[i][j+1] == board[i][j])
+            {
+                board[i][j] = 2*board[i][j];
+                score = score + board[i][j];
+                board[i][j+1] = 0;
+            }
+        }
+        // sliding the tiles across as expected
+        for (int j = 1; j < 4; j++)
+        {
+            if (board[i][j] != 0)
+            {
+                for (int k = j; k > 0; k--)
+                {
+                    if (board[i][k-1] == 0)
+                    {
+                        board[i][k-1] = board[i][k];
+                        board[i][k] = 0;
+                    }
+                }
+            }
+        }
+    }
 }

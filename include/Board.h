@@ -17,12 +17,14 @@ class Board
         bool CanMakeAMove();
         void DisplayBoard();
         void AddTile(int i, int j, int value);
+        int GetBoard(int i, int j);
         int EndGame();
     protected:
     private:
         //variables
         int board[4][4];
         int score;
+        int moves;
         //functions
         bool CanMakeUpMove();
         bool CanMakeRightMove();
