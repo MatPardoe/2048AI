@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <time.h> //seeds the random number generator
+#include <sstream>
+#include <fstream>
 
 #include <Board.h>
 #include <Controler.h>
@@ -12,19 +14,56 @@ using namespace std;
 
 int main()
 {
-    Board board;
-    ControlerFactory factory;
-    Controler* controler = factory.GetControler();
-    board.DisplayBoard();
-    cout << "Hello world!" << endl;
+    string outputName;
+    cout << "What do you want to call the output csv file ? ";
+    cin >> outputName;
+    outputName = outputName + ".csv";
+    int games;
+    cout << "How many games do you want to run ? ";
+    cin >> games;
+    int scores[games];
+    int moves[games];
+    clock_t time[games];
 
     RandomDirection randomDirection;
-    while (board.CanMakeAMove())
+    for (int i = 0; i < games; i++)
     {
-        board.Move(randomDirection.GetMove(board));
+        Board board;
+        time[i] = clock();
+        while (board.CanMakeAMove())
+        {
+            board.Move(randomDirection.GetMove(board));
+        }
+        time[i] = clock()-time[i];
+        scores[i] = board.GetScore();
+        moves[i] = board.EndGame();
+        board.DisplayBoard();
     }
-    board.DisplayBoard();
-    cout << board.GetScore() << endl;
+
+    //write output
+    ofstream outFile (outputName.c_str());
+    if (outFile.is_open())
+    {
+        outFile << "score, moves \n";
+        for (int i = 0; i < games; i++)
+        {
+            string line = "";
+            //can't put in numbers directly
+            ostringstream convert;
+            convert << scores[i];
+            line = convert.str() + ", ";
+            convert.str("");
+            convert << moves[i];
+            line = line + convert.str() + "\n";
+            outFile << line;
+        }
+        outFile.close();
+    }
+    else
+    {
+        cout << "Unable to save the data to a file" << endl;
+    }
+
 
     /*
     // testing code

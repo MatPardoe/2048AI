@@ -49,6 +49,8 @@ Temporary Items
 # Files added by me
 *.o
 *.exe
+*.csv
+*.xlsx
 # specific files added that may need to be removed later
 2048AI.depend
 2048AI.layout

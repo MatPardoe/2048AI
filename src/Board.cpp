@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <time.h>
+#include <stdio.h>
 #include <iostream>
 
 #include "Board.h"
@@ -149,10 +150,12 @@ bool Board::CanMakeAMove()
     }
     if (CanMakeRightMove())
     {
+        //works
         return true;
     }
     if (CanMakeDownMove())
     {
+        //works
         return true;
     }
     if (CanMakeLeftMove())
@@ -164,13 +167,16 @@ bool Board::CanMakeAMove()
 
 void Board::DisplayBoard()
 {
+    std::cout << "-------------------------------------" << std::endl;
     for (int i = 0; i<4; i++)
     {
+        std::cout << "|  ";
         for (int j = 0; j<4; j++)
         {
-            std::cout << board[i][j] << "   ";
+            // using the c printf() so that I can format the output
+            printf("%04d  |  ", board[i][j]);
         }
-        std::cout << std::endl;
+        std::cout << std::endl << "-------------------------------------" << std::endl;
     }
 }
 
@@ -186,18 +192,18 @@ int Board::GetBoard(int i, int j)
 
 int Board::EndGame()
 {
-    throw "not yet implemented";
+    return moves;
 }
 
 // private methods
 
 bool Board::CanMakeUpMove()
 {
-    for (int i = 0; i<4; i++)
+    for (int i = 0; i < 4; i++)
     {
         bool noneZero = false;
         int lastValue = 0;
-        for (int j = 3; j<-1; j--)
+        for (int j = 3; j > -1; j--)
         {
             if (noneZero)
             {
@@ -226,11 +232,11 @@ bool Board::CanMakeUpMove()
 
 bool Board::CanMakeRightMove()
 {
-    for (int i = 0; i<4; i++)
+    for (int i = 0; i < 4; i++)
     {
         bool noneZero = false;
         int lastValue = 0;
-        for (int j = 0; j<4; j++)
+        for (int j = 0; j < 4; j++)
         {
             if (noneZero)
             {
@@ -259,11 +265,11 @@ bool Board::CanMakeRightMove()
 
 bool Board::CanMakeDownMove()
 {
-    for (int i = 0; i<4; i++)
+    for (int i = 0; i < 4; i++)
     {
         bool noneZero = false;
         int lastValue = 0;
-        for (int j = 0; j<4; j++)
+        for (int j = 0; j < 4; j++)
         {
             if (noneZero)
             {
@@ -292,11 +298,11 @@ bool Board::CanMakeDownMove()
 
 bool Board::CanMakeLeftMove()
 {
-    for (int i = 0; i<4; i++)
+    for (int i = 0; i < 4; i++)
     {
         bool noneZero = false;
         int lastValue = 0;
-        for (int j = 3; j<-1; j--)
+        for (int j = 3; j > -1; j--)
         {
             if (noneZero)
             {
@@ -328,7 +334,7 @@ void Board::MakeUpMove()
     for (int i = 0; i < 4; i++)
     {
         // combine the tiles that are the same and next to each other
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < 4; j++)
         {
             if (board[j][i] != 0 && board[j+1][i] == board[j][i])
             {
