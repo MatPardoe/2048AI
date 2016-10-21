@@ -14,6 +14,7 @@ using namespace std;
 
 int main()
 {
+    // get initial input from person running the code
     string outputName;
     cout << "What do you want to call the output csv file ? ";
     cin >> outputName;
@@ -21,10 +22,14 @@ int main()
     int games;
     cout << "How many games do you want to run ? ";
     cin >> games;
+
+    // set up arrays for all of the values you want to be able to output
     int scores[games];
     int moves[games];
     clock_t time[games];
+    int maximum[games];
 
+    // get the AI that is going to be used this run
     RandomDirection randomDirection;
     for (int i = 0; i < games; i++)
     {
@@ -37,6 +42,21 @@ int main()
         time[i] = clock()-time[i];
         scores[i] = board.GetScore();
         moves[i] = board.EndGame();
+
+        maximum[i] = 0;
+        // find the maximum tile
+        for (int j = 0; j < 4; j++)
+        {
+            for (int k = 0; k < 4; k++)
+            {
+                int temp = board.GetBoard(j,k);
+                if (temp > maximum[i])
+                {
+                    maximum[i] = temp;
+                }
+            }
+        }
+
         board.DisplayBoard();
     }
 
@@ -44,17 +64,36 @@ int main()
     ofstream outFile (outputName.c_str());
     if (outFile.is_open())
     {
-        outFile << "score, moves \n";
+        // header line
+        outFile << "score, moves, time (seconds), highest value, score at 2048 tile (not yet implemented)\n";
         for (int i = 0; i < games; i++)
         {
             string line = "";
             //can't put in numbers directly
             ostringstream convert;
+
+            // getting the score
             convert << scores[i];
             line = convert.str() + ", ";
             convert.str("");
+
+            // getting the moves
             convert << moves[i];
-            line = line + convert.str() + "\n";
+            line = line + convert.str() + ", ";
+            convert.str("");
+
+            // getting the time
+            convert << (((float)time[i])/CLOCKS_PER_SEC);
+            line = line + convert.str() + ", ";
+            convert.str("");
+
+            // getting the highest value tile
+            convert << maximum[i];
+            line = line + convert.str() + ", ";
+            convert.str("");
+
+            // placing the line in the file
+            line = line + "\n";
             outFile << line;
         }
         outFile.close();
@@ -63,45 +102,5 @@ int main()
     {
         cout << "Unable to save the data to a file" << endl;
     }
-
-
-    /*
-    // testing code
-    // 1
-    board.AddTile(0,0,2);
-    board.AddTile(0,1,2);
-    board.AddTile(0,2,2);
-    board.AddTile(0,3,2);
-    // 2
-    board.AddTile(1,0,2);
-    board.AddTile(1,1,2);
-    board.AddTile(1,2,2);
-    board.AddTile(1,3,2);
-    // 3
-    board.AddTile(2,0,2);
-    board.AddTile(2,1,2);
-    board.AddTile(2,2,2);
-    board.AddTile(2,3,2);
-    // 4
-    board.AddTile(3,0,2);
-    board.AddTile(3,1,2);
-    board.AddTile(3,2,2);
-    board.AddTile(3,3,2);
-    // testing
-    board.DisplayBoard();
-    board.MakeMove(Down);
-    cout << "Results Board : " << endl;
-    board.DisplayBoard();
-    board.MakeMove(Right);
-    cout << "Board : " << endl;
-    board.DisplayBoard();
-    board.MakeMove(Left);
-    cout << "Board : " << endl;
-    board.DisplayBoard();
-    board.MakeMove(Up);
-    cout << "Another Board : " << endl;
-    board.DisplayBoard();
-    // testing code end
-    */
     return 0;
 }
