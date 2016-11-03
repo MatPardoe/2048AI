@@ -73,7 +73,9 @@ Board::Board(int currentBoard[4][4], int currentScore)
     srand((unsigned int) seconds);
 }
 
-//public methods
+// no copy constructor needed as all of the things are copied correctly by default
+
+// public methods
 
 int Board::GetScore()
 {

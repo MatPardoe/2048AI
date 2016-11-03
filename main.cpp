@@ -37,7 +37,7 @@ int main()
         time[i] = clock();
         while (board.CanMakeAMove())
         {
-            board.Move(randomDirection.GetMove(board));
+            board.Move(randomDirection.GetMove(board)); // passing the board is automatically copied instead of sharing the object
         }
         time[i] = clock()-time[i];
         scores[i] = board.GetScore();

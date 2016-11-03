@@ -12,7 +12,6 @@ class RandomDirection : public Controler
         Direction GetMove(Board board);
     protected:
     private:
-        int board[4][4];
         Direction choices[4];
 };
 
