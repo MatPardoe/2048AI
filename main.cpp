@@ -32,7 +32,7 @@ int main()
 
     // get the AI that is going to be used this run
     RandomDirection randomDirection;
-    MinMax minMax(4);
+    MinMax minMax(3);
     for (int i = 0; i < games; i++)
     {
         Board board;
