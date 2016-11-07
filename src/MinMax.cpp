@@ -14,9 +14,10 @@ struct node
 };
 */
 
-MinMax::MinMax()
+
+MinMax::MinMax(int depth)
 {
-    //ctor
+    treeDepth = depth;
 }
 
 Direction MinMax::GetMove(Board board)
@@ -24,7 +25,7 @@ Direction MinMax::GetMove(Board board)
     node root;
     Board tempBoard(board);
     root.currentBoard = tempBoard;
-    // do MakeTree
+    MakeTree(root,treeDepth);
     CalculateHeuristics(root);
 
     // find which of the children is the best node
@@ -62,7 +63,6 @@ Direction MinMax::GetMove(Board board)
 
 void MinMax::MakeTree(node& root, int depth)
 {
-    //Change all of this
     if (depth == 0)
     {
         return;
@@ -102,13 +102,71 @@ void MinMax::MakeTree(node& root, int depth)
 
 Board MinMax::Move(Board board, Direction Move)
 {
-    int minX;
-    int minY;
-    int minAverageScore;
+    board.MakeMove(Move);
+    int minX = 0;
+    int minY = 0;
+    int minAverageScore = 0;
+
     for(int x = 0; x < 4; x++)
     {
+        for(int y = 0; y < 4; y++)
+        {
+            if(board.GetBoard(x,y) == 0)
+            {
+                board.AddTile(x,y,2);
 
+                int tempAverage = 0;
+                int movesCount = 0;
+                //test out each move
+                if(board.CanMakeMove(Up))
+                {
+                    Board tempBoard(board);
+                    tempBoard.MakeMove(Up);
+                    movesCount++;
+                    tempAverage = tempAverage + tempBoard.GetScore();
+                }
+                if(board.CanMakeMove(Right))
+                {
+                    Board tempBoard(board);
+                    tempBoard.MakeMove(Right);
+                    movesCount++;
+                    tempAverage = tempAverage + tempBoard.GetScore();
+                }
+                if(board.CanMakeMove(Down))
+                {
+                    Board tempBoard(board);
+                    tempBoard.MakeMove(Down);
+                    movesCount++;
+                    tempAverage = tempAverage + tempBoard.GetScore();
+                }
+                if(board.CanMakeMove(Left))
+                {
+                    Board tempBoard(board);
+                    tempBoard.MakeMove(Left);
+                    movesCount++;
+                    tempAverage = tempAverage + tempBoard.GetScore();
+                }
+
+                if(movesCount != 0)
+                {
+                    tempAverage = tempAverage/movesCount; //will result in an integer whatever, but different positions should give different enough scores that it doesn't matter
+                } else
+                {
+                    tempAverage = -1;
+                }
+
+                if(tempAverage < minAverageScore or minAverageScore == 0)
+                {
+                    minAverageScore = tempAverage;
+                    minX = x;
+                    minY = y;
+                }
+
+                board.AddTile(x,y,0);
+            }
+        }
     }
+    board.AddTile(minX,minY,2);
     return board;
 }
 

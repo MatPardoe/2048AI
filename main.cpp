@@ -7,6 +7,7 @@
 #include <Board.h>
 #include <Controler.h>
 #include <RandomDirection.h>
+#include <MinMax.h>
 #include <ControlerFactory.h>
 
 using namespace std;
@@ -31,13 +32,14 @@ int main()
 
     // get the AI that is going to be used this run
     RandomDirection randomDirection;
+    MinMax minMax(4);
     for (int i = 0; i < games; i++)
     {
         Board board;
         time[i] = clock();
         while (board.CanMakeAMove())
         {
-            board.Move(randomDirection.GetMove(board)); // passing the board is automatically copied instead of sharing the object
+            board.Move(minMax.GetMove(board)); // passing the board is automatically copied instead of sharing the object
         }
         time[i] = clock()-time[i];
         scores[i] = board.GetScore();

@@ -19,7 +19,7 @@ struct node
 class MinMax : public Controler
 {
     public:
-        MinMax();
+        MinMax(int depth);
         Direction GetMove(Board board);
     protected:
     private:
@@ -28,7 +28,8 @@ class MinMax : public Controler
         void CalculateHeuristics(node& root);
         void DeleteTree(node& root);
         double EvaluationFunction(Board board);
-
+        //variables
+        int treeDepth;
 };
 
 #endif // MINMAX_H
