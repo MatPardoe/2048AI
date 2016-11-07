@@ -31,15 +31,24 @@ int main()
     int maximum[games];
 
     // get the AI that is going to be used this run
-    RandomDirection randomDirection;
-    MinMax minMax(3);
+    ControlerFactory factory;
+    factory.DisplayOptions();
+    cout << "Which algorithm do you want to use ? ";
+    int choice;
+    cin >> choice;
+    cout << "If your chosen algorithm creates a tree (if it doesn't it doesn't matter what you choose) how deep do you want it to go (the deeper you go the longer it takes) ? ";
+    int treeDepth;
+    cin >> treeDepth;
+    Controler* controler = factory.GetControler(choice,treeDepth);
+
+    // run all the required games
     for (int i = 0; i < games; i++)
     {
         Board board;
         time[i] = clock();
         while (board.CanMakeAMove())
         {
-            board.Move(minMax.GetMove(board)); // passing the board is automatically copied instead of sharing the object
+            board.Move((*controler).GetMove(board)); // passing the board is automatically copied instead of sharing the object
         }
         time[i] = clock()-time[i];
         scores[i] = board.GetScore();

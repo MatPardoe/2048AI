@@ -6,7 +6,6 @@
 class Controler
 {
     public:
-        Controler();
         virtual Direction GetMove(Board board) = 0;
     protected:
     private:

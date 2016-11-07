@@ -3,12 +3,14 @@
 
 #include <Controler.h>
 #include <RandomDirection.h>
+#include <MinMax.h>
 
 class ControlerFactory
 {
     public:
         ControlerFactory();
-        Controler* GetControler();
+        Controler* GetControler(int choice, int TreeDepth);
+        void DisplayOptions();
     protected:
     private:
 };
