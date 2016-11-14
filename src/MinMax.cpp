@@ -15,9 +15,10 @@ struct node
 */
 
 
-MinMax::MinMax(int depth)
+MinMax::MinMax(int depth, Evaluation* evaluationFunction)
 {
     treeDepth = depth;
+    evaluation = evaluationFunction;
 }
 
 Direction MinMax::GetMove(Board board)
@@ -234,46 +235,8 @@ void MinMax::CalculateHeuristics(node& root)
     //if there are no child nodes calculate the heuristic value of the node from the current board
     if (valueFound == false)
     {
-        root.heuristicValue = EvaluationFunction(root.currentBoard);
+        root.heuristicValue = (*evaluation).Evaluate(root.currentBoard);
     }
-}
-
-
-double MinMax::EvaluationFunction(Board board)
-{
-    /*
-    double value = board.GetScore();
-    int maxX = 0;
-    int maxY = 0;
-    int maxValue = 0;
-    for(int i = 0; i < 4; i++)
-    {
-        for(int j = 0; j < 4; j++)
-        {
-            if(board.GetBoard(i,j) > maxValue)
-            {
-                maxValue = board.GetBoard(i,j);
-                maxX=i;
-                maxY=j;
-            }
-        }
-    }
-
-    if(maxX == 0 or maxX == 3)
-    {
-        value = value*1.2;
-    }
-
-    if(maxY == 0 or maxY == 3)
-    {
-        value = value*1.2;
-    }
-    */
-    if(board.CanMakeAMove())
-    {
-        return board.GetScore();
-    }
-    return board.GetScore()/1000;
 }
 
 void MinMax::DeleteTree(node& root)

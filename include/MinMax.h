@@ -3,6 +3,7 @@
 
 #include <Controler.h>
 #include <Board.h>
+#include <Evaluation.h>
 
 struct node
 {
@@ -19,7 +20,7 @@ struct node
 class MinMax : public Controler
 {
     public:
-        MinMax(int depth);
+        MinMax(int depth, Evaluation* evaluationFunction);
         Direction GetMove(Board board);
     protected:
     private:
@@ -27,9 +28,9 @@ class MinMax : public Controler
         Board Move(Board board, Direction Move);
         void CalculateHeuristics(node& root);
         void DeleteTree(node& root);
-        double EvaluationFunction(Board board);
         //variables
         int treeDepth;
+        Evaluation* evaluation;
 };
 
 #endif // MINMAX_H
