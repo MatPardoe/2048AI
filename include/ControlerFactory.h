@@ -12,6 +12,7 @@ class ControlerFactory
         ControlerFactory();
         Controler* GetControler(int choiceAlgorithm, int TreeDepth);
         void DisplayOptions();
+        void DisplayEvaluationOptions();
     protected:
     private:
         Evaluation* GetEvaluator(int choice);
