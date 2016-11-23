@@ -39,7 +39,12 @@ int main()
     cout << "If your chosen algorithm creates a tree (if it doesn't it doesn't matter what you choose) how deep do you want it to go (the deeper you go the longer it takes) ? ";
     int treeDepth;
     cin >> treeDepth;
-    Controler* controler = factory.GetControler(choice,treeDepth);
+    factory.DisplayEvaluationOptions();
+    cout << "which evaluation function do you want to use ? ";
+    int evaluation;
+    cin >> evaluation;
+
+    Controler* controler = factory.GetControler(choice,treeDepth,evaluation);
 
     // run all the required games
     for (int i = 0; i < games; i++)

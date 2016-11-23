@@ -10,7 +10,7 @@ class ControlerFactory
 {
     public:
         ControlerFactory();
-        Controler* GetControler(int choiceAlgorithm, int TreeDepth);
+        Controler* GetControler(int choiceAlgorithm, int TreeDepth, int choiceEvaluation);
         void DisplayOptions();
         void DisplayEvaluationOptions();
     protected:
