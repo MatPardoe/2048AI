@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstdlib>
-#include <time.h> //seeds the random number generator
+#include <time.h>
 #include <sstream>
 #include <fstream>
 
@@ -15,7 +15,7 @@ using namespace std;
 
 int main()
 {
-    // get initial input from person running the code
+    // get initial input from person running the code for csv name number of games
     string outputName;
     cout << "What do you want to call the output csv file ? ";
     cin >> outputName;
@@ -30,7 +30,7 @@ int main()
     clock_t time[games];
     int maximum[games];
 
-    // get the AI that is going to be used this run
+    // get the AI that is going to be used this run and all related information (tree depth and heuristic)
     ControlerFactory factory;
     factory.DisplayOptions();
     cout << "Which algorithm do you want to use ? ";
@@ -50,12 +50,12 @@ int main()
     for (int i = 0; i < games; i++)
     {
         Board board;
-        time[i] = clock();
+        time[i] = clock(); //start timer
         while (board.CanMakeAMove())
         {
             board.Move((*controler).GetMove(board)); // passing the board is automatically copied instead of sharing the object
         }
-        time[i] = clock()-time[i];
+        time[i] = clock()-time[i]; //get overall time for the game
         scores[i] = board.GetScore();
         moves[i] = board.EndGame();
 

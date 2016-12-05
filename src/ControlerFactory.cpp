@@ -11,6 +11,10 @@ ControlerFactory::ControlerFactory()
 
 }
 
+/**
+returns a pointer to the selected controler with the other settings
+such as the depth of trees generated and which evaluation to use
+*/
 Controler* ControlerFactory::GetControler(int choiceAlgorithm, int TreeDepth, int choiceEvaluation)
 {
     // get the correct evaluation class
@@ -28,6 +32,10 @@ Controler* ControlerFactory::GetControler(int choiceAlgorithm, int TreeDepth, in
     }
 }
 
+/**
+displays what options are available for the controler
+including what the default value is
+*/
 void ControlerFactory::DisplayOptions()
 {
     std::cout << "0 = Random non-AI base class" << std::endl;
@@ -36,6 +44,10 @@ void ControlerFactory::DisplayOptions()
     std::cout << "All other Values default to the Random non-AI class" << std::endl;
 }
 
+/**
+displays what options are available for the evaluation function
+including what the default value is
+*/
 void ControlerFactory::DisplayEvaluationOptions()
 {
     std::cout << "0 = Greedy" << std::endl;
@@ -46,6 +58,9 @@ void ControlerFactory::DisplayEvaluationOptions()
     std::cout << "All other values default to the Greedy evaluation" << std::endl;
 }
 
+/**
+returns a pointer to the select evaluation class
+*/
 Evaluation* ControlerFactory::GetEvaluator(int choice)
 {
     switch (choice)

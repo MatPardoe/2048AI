@@ -7,6 +7,10 @@
 
 // constructors
 
+/**
+sets up the board as it would be for a new game (empty apart from two tiles)
+including seeding the random number generator and setting score and moves to zero
+*/
 Board::Board()
 {
     int i;
@@ -19,6 +23,9 @@ Board::Board()
         }
     }
 
+    time_t seconds;
+    time(&seconds);
+    srand((unsigned int) seconds);
 
     int x = rand()%4;
     int y = rand()%4;
@@ -51,11 +58,12 @@ Board::Board()
 
     score = 0;
     moves = 0;
-    time_t seconds;
-    time(&seconds);
-    srand((unsigned int) seconds);
 }
 
+/**
+sets up the board using the provided 4 by 4 array and the current score
+also seeds the random number generator
+*/
 Board::Board(int currentBoard[4][4], int currentScore)
 {
     int i;
@@ -68,6 +76,7 @@ Board::Board(int currentBoard[4][4], int currentScore)
         }
     }
     score = currentScore;
+    moves = 0;
     time_t seconds;
     time(&seconds);
     srand((unsigned int) seconds);
@@ -77,11 +86,20 @@ Board::Board(int currentBoard[4][4], int currentScore)
 
 // public methods
 
+/**
+gets the score
+*/
 int Board::GetScore()
 {
     return score;
 }
 
+/**
+runs through an entire move
+checking it can move in that direction
+moving the tiles in said direction
+adding the random tile (4 tile 1 in 10 times)
+*/
 void Board::Move(Direction direction)
 {
     if (!CanMakeMove(direction))
@@ -105,6 +123,10 @@ void Board::Move(Direction direction)
     board[x][y] = 2;
 }
 
+/**
+calls the private method to slide the tiles
+in the direction called
+*/
 void Board::MakeMove(Direction direction)
 {
     switch (direction)
@@ -124,6 +146,9 @@ void Board::MakeMove(Direction direction)
     }
 }
 
+/**
+returns a boolean based on if a move can be made in the direction called
+*/
 bool Board::CanMakeMove(Direction direction)
 {
     switch (direction)
@@ -144,6 +169,9 @@ bool Board::CanMakeMove(Direction direction)
     return false;
 }
 
+/**
+checks if any move at all can be made
+*/
 bool Board::CanMakeAMove()
 {
     if (CanMakeUpMove())
@@ -152,12 +180,10 @@ bool Board::CanMakeAMove()
     }
     if (CanMakeRightMove())
     {
-        //works
         return true;
     }
     if (CanMakeDownMove())
     {
-        //works
         return true;
     }
     if (CanMakeLeftMove())
@@ -167,6 +193,9 @@ bool Board::CanMakeAMove()
     return false;
 }
 
+/**
+displays the board to the standard output
+*/
 void Board::DisplayBoard()
 {
     std::cout << "-------------------------------------" << std::endl;
@@ -182,16 +211,25 @@ void Board::DisplayBoard()
     }
 }
 
+/**
+add a tile of a set value at a set location
+*/
 void Board::AddTile(int i, int j, int value)
 {
     board[i][j] = value;
 }
 
+/**
+gets the tile value at a particular board location
+*/
 int Board::GetBoard(int i, int j)
 {
     return board[i][j];
 }
 
+/**
+returns end game values (currently just number of moves)
+*/
 int Board::EndGame()
 {
     return moves;
@@ -199,6 +237,9 @@ int Board::EndGame()
 
 // private methods
 
+/**
+checks if you can make an up move
+*/
 bool Board::CanMakeUpMove()
 {
     for (int i = 0; i < 4; i++)
@@ -232,6 +273,9 @@ bool Board::CanMakeUpMove()
     return false;
 }
 
+/**
+checks if you can make an right move
+*/
 bool Board::CanMakeRightMove()
 {
     for (int i = 0; i < 4; i++)
@@ -265,6 +309,9 @@ bool Board::CanMakeRightMove()
     return false;
 }
 
+/**
+checks if you can make an down move
+*/
 bool Board::CanMakeDownMove()
 {
     for (int i = 0; i < 4; i++)
@@ -298,6 +345,9 @@ bool Board::CanMakeDownMove()
     return false;
 }
 
+/**
+checks if you can make an left move
+*/
 bool Board::CanMakeLeftMove()
 {
     for (int i = 0; i < 4; i++)
@@ -331,6 +381,9 @@ bool Board::CanMakeLeftMove()
     return false;
 }
 
+/**
+makes the up move
+*/
 void Board::MakeUpMove()
 {
     for (int i = 0; i < 4; i++)
@@ -363,6 +416,9 @@ void Board::MakeUpMove()
     }
 }
 
+/**
+makes the right move
+*/
 void Board::MakeRightMove()
 {
     for (int i = 0; i < 4; i++)
@@ -395,6 +451,9 @@ void Board::MakeRightMove()
     }
 }
 
+/**
+makes the down move
+*/
 void Board::MakeDownMove()
 {
     for (int i = 0; i < 4; i++)
@@ -427,6 +486,9 @@ void Board::MakeDownMove()
     }
 }
 
+/**
+makes the left move
+*/
 void Board::MakeLeftMove()
 {
     for (int i = 0; i < 4; i++)
