@@ -4,6 +4,7 @@
 #include <Controler.h>
 #include <RandomDirection.h>
 #include <MinMax.h>
+#include <ExpectiMax.h>
 #include <Evaluation.h>
 
 class ControlerFactory

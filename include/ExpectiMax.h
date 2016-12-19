@@ -4,10 +4,11 @@
 #include <Controler.h>
 #include <Board.h>
 #include <Evaluation.h>
+#include <vector>
 
 struct expectiNode
 {
-    Bool ChanceNode;
+    bool ChanceNode;
     double Chance;
     Board currentBoard; // the board state at this move
     double heuristicValue; // the rating of the board position, either by the best of the children or calculated if it is a leaf
@@ -16,6 +17,7 @@ struct expectiNode
     expectiNode *rightNode = 0;
     expectiNode *downNode = 0;
     expectiNode *leftNode = 0;
+    std::vector<expectiNode *> chanceNodeList;
 };
 
 
@@ -26,9 +28,8 @@ class ExpectiMax : public Controler
         Direction GetMove(Board board);
     protected:
     private:
-        void MakeTree(expectNode& root, int depth);
-        Board Move(Board board, Direction Move);
-        void CalculateHeuristics(expectNode& root);
+        void MakeTree(expectiNode& root, int depth);
+        void CalculateHeuristics(expectiNode& root);
         void DeleteTree(expectiNode& root);
         //variables
         int treeDepth;
