@@ -146,6 +146,85 @@ void ExpectiMax::MakeTree(expectiNode& root, int depth)
 
 void ExpectiMax::CalculateHeuristics(expectiNode& root)
 {
+    if(root.ChanceNode)
+    {
+        //if it is a chance node either select the best value from all the child nodes
+        //or if there are no children use the evaluat function from evaluation
+        bool valueFound = false;
+
+        // up
+        if(root.upNode != 0)
+        {
+            CalculateHeuristics(*root.upNode);
+            if (valueFound == false)
+            {
+                root.heuristicValue = (*root.upNode).heuristicValue;
+            }
+            else if(root.heuristicValue < (*root.upNode).heuristicValue)
+            {
+                root.heuristicValue = (*root.upNode).heuristicValue;
+            }
+            valueFound = true;
+        }
+        //right
+        if(root.rightNode != 0)
+        {
+            CalculateHeuristics(*root.rightNode);
+            if (valueFound == false)
+            {
+                root.heuristicValue = (*root.rightNode).heuristicValue;
+            }
+            else if(root.heuristicValue < (*root.rightNode).heuristicValue)
+            {
+                root.heuristicValue = (*root.rightNode).heuristicValue;
+            }
+            valueFound = true;
+        }
+        //down
+        if(root.downNode != 0)
+        {
+            CalculateHeuristics(*root.downNode);
+            if (valueFound == false)
+            {
+                root.heuristicValue = (*root.downNode).heuristicValue;
+            }
+            else if(root.heuristicValue < (*root.downNode).heuristicValue)
+            {
+                root.heuristicValue = (*root.downNode).heuristicValue;
+            }
+            valueFound = true;
+        }
+        //left
+        if(root.leftNode != 0)
+        {
+            CalculateHeuristics(*root.leftNode);
+            if (valueFound == false)
+            {
+                root.heuristicValue = (*root.leftNode).heuristicValue;
+            }
+            else if(root.heuristicValue < (*root.leftNode).heuristicValue)
+            {
+                root.heuristicValue = (*root.leftNode).heuristicValue;
+            }
+            valueFound = true;
+        }
+
+        //if there are no child nodes calculate the heuristic value of the node from the current board
+        if (valueFound == false)
+        {
+            root.heuristicValue = (*evaluation).Evaluate(root.currentBoard);
+        }
+    }
+    else
+    {
+        //get the weighted average heuristic from the nodes in chanceNodeList
+        double heuristicValue = 0.0;
+        for(int i = 0; i<(int)root.chanceNodeList.size(); i++)
+        {
+            CalculateHeuristics(*root.chanceNodeList.at(i));
+            heuristicValue = heuristicValue + (*root.chanceNodeList.at(i)).heuristicValue * (*root.chanceNodeList.at(i)).Chance;
+        }
+    }
 
 }
 

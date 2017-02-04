@@ -6,8 +6,8 @@
 
 #include <Board.h>
 #include <Controler.h>
-#include <RandomDirection.h>
-#include <MinMax.h>
+//#include <RandomDirection.h>
+//#include <MinMax.h>
 #include <ControlerFactory.h>
 
 using namespace std;
