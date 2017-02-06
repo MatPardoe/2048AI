@@ -13,16 +13,44 @@
 using namespace std;
 
 
-int main()
+int main(int argc, char *argv[])
 {
-    // get initial input from person running the code for csv name number of games
+    //setup all variables
     string outputName;
-    cout << "What do you want to call the output csv file ? ";
-    cin >> outputName;
-    outputName = outputName + ".csv";
     int games;
-    cout << "How many games do you want to run ? ";
-    cin >> games;
+    int choice;
+    int treeDepth;
+    int evaluation;
+    ControlerFactory factory;
+
+    if( argc == 6)
+    {
+        //this has no error handling and just assumes that you have done it correctly
+        outputName = argv[1];
+        games = atoi(argv[2]);
+        choice = atoi(argv[3]);
+        treeDepth = atoi(argv[4]);
+        evaluation = atoi(argv[5]);
+    }
+    else
+    {
+        // get initial input from person running the code for csv name number of games
+        cout << "What do you want to call the output csv file ? ";
+        cin >> outputName;
+        outputName = outputName + ".csv";
+        cout << "How many games do you want to run ? ";
+        cin >> games;
+
+        // get the AI that is going to be used this run and all related information (tree depth and heuristic)
+        factory.DisplayOptions();
+        cout << "Which algorithm do you want to use ? ";
+        cin >> choice;
+        cout << "If your chosen algorithm creates a tree (if it doesn't it doesn't matter what you choose) how deep do you want it to go (the deeper you go the longer it takes) ? ";
+        cin >> treeDepth;
+        factory.DisplayEvaluationOptions();
+        cout << "which evaluation function do you want to use ? ";
+        cin >> evaluation;
+    }
 
     // set up arrays for all of the values you want to be able to output
     int scores[games];
@@ -30,20 +58,7 @@ int main()
     clock_t time[games];
     int maximum[games];
 
-    // get the AI that is going to be used this run and all related information (tree depth and heuristic)
-    ControlerFactory factory;
-    factory.DisplayOptions();
-    cout << "Which algorithm do you want to use ? ";
-    int choice;
-    cin >> choice;
-    cout << "If your chosen algorithm creates a tree (if it doesn't it doesn't matter what you choose) how deep do you want it to go (the deeper you go the longer it takes) ? ";
-    int treeDepth;
-    cin >> treeDepth;
-    factory.DisplayEvaluationOptions();
-    cout << "which evaluation function do you want to use ? ";
-    int evaluation;
-    cin >> evaluation;
-
+    // create the controler
     Controler* controler = factory.GetControler(choice,treeDepth,evaluation);
 
     // run all the required games
