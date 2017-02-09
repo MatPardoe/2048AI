@@ -3,6 +3,7 @@
 #include <time.h>
 #include <sstream>
 #include <fstream>
+#include <utility>
 
 #include <Board.h>
 #include <Controler.h>
@@ -55,6 +56,8 @@ int main(int argc, char *argv[])
     // set up arrays for all of the values you want to be able to output
     int scores[games];
     int moves[games];
+    int movesAt2048[games];
+    int scoresAt2048[games];
     clock_t time[games];
     int maximum[games];
 
@@ -72,7 +75,12 @@ int main(int argc, char *argv[])
         }
         time[i] = clock()-time[i]; //get overall time for the game
         scores[i] = board.GetScore();
-        moves[i] = board.EndGame();
+
+        std::pair<int, std::pair<int, int> > tempPairPair = board.EndGame();
+        moves[i] = tempPairPair.first;
+        scoresAt2048[i] = tempPairPair.second.first;
+        movesAt2048[i] = tempPairPair.second.second;
+
 
         maximum[i] = 0;
         // find the maximum tile
@@ -96,7 +104,7 @@ int main(int argc, char *argv[])
     if (outFile.is_open())
     {
         // header line
-        outFile << "score, moves, time (seconds), highest value, score at 2048 tile (not yet implemented)\n";
+        outFile << "score, moves, time (seconds), highest value, score at 2048 tile, moves at 2048 tile\n";
         for (int i = 0; i < games; i++)
         {
             string line = "";
@@ -120,6 +128,16 @@ int main(int argc, char *argv[])
 
             // getting the highest value tile
             convert << maximum[i];
+            line = line + convert.str() + ", ";
+            convert.str("");
+
+            // getting the score at 2048
+            convert << scoresAt2048[i];
+            line = line + convert.str() + ", ";
+            convert.str("");
+
+            // getting the moves at 2048
+            convert << movesAt2048[i];
             line = line + convert.str() + ", ";
             convert.str("");
 

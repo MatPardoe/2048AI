@@ -58,6 +58,8 @@ Board::Board()
 
     score = 0;
     moves = 0;
+    scoreAt2048 = 0;
+    movesAt2048 = 0;
 }
 
 /**
@@ -121,6 +123,28 @@ void Board::Move(Direction direction)
         return;
     }
     board[x][y] = 2;
+
+    //if 2048 has appeared for the first time get the moves and score
+    if (movesAt2048 == 0)
+    {
+        bool yes2048Tile = false;
+        for (int j = 0; j < 4; j++)
+        {
+            for (int k = 0; k < 4; k++)
+            {
+                int temp = GetBoard(j,k);
+                if (temp == 2048)
+                {
+                    yes2048Tile = true;
+                }
+            }
+        }
+        if(yes2048Tile)
+        {
+            movesAt2048 = moves;
+            scoreAt2048 = score;
+        }
+    }
 }
 
 /**
@@ -228,11 +252,11 @@ int Board::GetBoard(int i, int j)
 }
 
 /**
-returns end game values (currently just number of moves)
+returns end game values (currently number of moves, and score and moves at 2048 tile)
 */
-int Board::EndGame()
+std::pair<int, std::pair<int, int> > Board::EndGame()
 {
-    return moves;
+    return std::make_pair(moves, std::make_pair(scoreAt2048, movesAt2048));
 }
 
 // private methods

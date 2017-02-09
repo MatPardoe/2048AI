@@ -1,6 +1,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <utility>
+
 enum Direction {Up, Right, Down, Left};
 
 class Board
@@ -18,13 +20,15 @@ class Board
         void DisplayBoard();
         void AddTile(int i, int j, int value);
         int GetBoard(int i, int j);
-        int EndGame();
+        std::pair<int, std::pair<int, int> > EndGame();
     protected:
     private:
         //variables
         int board[4][4];
         int score;
         int moves;
+        int scoreAt2048;
+        int movesAt2048;
         //functions
         bool CanMakeUpMove();
         bool CanMakeRightMove();
