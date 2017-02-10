@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <time.h>
 #include <stdio.h>
 #include <iostream>
 
@@ -22,10 +21,6 @@ Board::Board()
             board[i][j] = 0;
         }
     }
-
-    time_t seconds;
-    time(&seconds);
-    srand((unsigned int) seconds);
 
     int x = rand()%4;
     int y = rand()%4;
@@ -79,9 +74,6 @@ Board::Board(int currentBoard[4][4], int currentScore)
     }
     score = currentScore;
     moves = 0;
-    time_t seconds;
-    time(&seconds);
-    srand((unsigned int) seconds);
 }
 
 // no copy constructor needed as all of the things are copied correctly by default

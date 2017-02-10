@@ -24,6 +24,11 @@ int main(int argc, char *argv[])
     int evaluation;
     ControlerFactory factory;
 
+    //seed the random number generator
+    time_t seconds;
+    time(&seconds);
+    srand((unsigned int) seconds);
+
     if( argc == 6)
     {
         //this has no error handling and just assumes that you have done it correctly
@@ -96,7 +101,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        board.DisplayBoard();
+        //board.DisplayBoard();
     }
 
     //write output
