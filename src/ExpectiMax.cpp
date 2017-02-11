@@ -25,43 +25,43 @@ ExpectiMax::ExpectiMax(int depth, Evaluation* evaluationFunction)
 
 Direction ExpectiMax::GetMove(Board board)
 {
-    expectiNode root;
+    expectiNode* root = new expectiNode;
     Board tempBoard(board);
-    root.currentBoard = tempBoard;
-    root.ChanceNode = true;
-    MakeTree(root,treeDepth);
-    CalculateHeuristics(root);
+    (*root).currentBoard = tempBoard;
+    (*root).ChanceNode = true;
+    MakeTree((*root),treeDepth);
+    CalculateHeuristics((*root));
 
     // find which of the children is the best node
     //up
-    if (root.upNode != 0)
+    if ((*root).upNode != 0)
     {
-        if (root.heuristicValue == (*root.upNode).heuristicValue)
+        if ((*root).heuristicValue == (*(*root).upNode).heuristicValue)
         {
-            DeleteTree(root);
+            DeleteTree((*root));
             return Up;
         }
     }
     //right
-    if (root.rightNode != 0)
+    if ((*root).rightNode != 0)
     {
-        if (root.heuristicValue == (*root.rightNode).heuristicValue)
+        if ((*root).heuristicValue == (*(*root).rightNode).heuristicValue)
         {
-            DeleteTree(root);
+            DeleteTree((*root));
             return Right;
         }
     }
     //down
-    if (root.downNode != 0)
+    if ((*root).downNode != 0)
     {
-        if (root.heuristicValue == (*root.downNode).heuristicValue)
+        if ((*root).heuristicValue == (*(*root).downNode).heuristicValue)
         {
-            DeleteTree(root);
+            DeleteTree((*root));
             return Down;
         }
     }
     //if it hasn't been any of the above values it must be the left one
-    DeleteTree(root);
+    DeleteTree((*root));
     return Left;
 }
 
