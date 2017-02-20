@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     int choice;
     int treeDepth;
     int evaluation;
+    string stateName;
     ControlerFactory factory;
 
     //seed the random number generator
@@ -29,7 +30,7 @@ int main(int argc, char *argv[])
     time(&seconds);
     srand((unsigned int) seconds);
 
-    if( argc == 6)
+    if( argc == 7)
     {
         //this has no error handling and just assumes that you have done it correctly
         outputName = argv[1];
@@ -37,6 +38,7 @@ int main(int argc, char *argv[])
         choice = atoi(argv[3]);
         treeDepth = atoi(argv[4]);
         evaluation = atoi(argv[5]);
+        stateName = argv[6];
     }
     else
     {
@@ -51,11 +53,12 @@ int main(int argc, char *argv[])
         factory.DisplayOptions();
         cout << "Which algorithm do you want to use ? ";
         cin >> choice;
-        cout << "If your chosen algorithm creates a tree (if it doesn't it doesn't matter what you choose) how deep do you want it to go (the deeper you go the longer it takes) ? ";
+        cout << "If your chosen algorithm creates a tree how deep do you want it to go (the deeper you go the longer it takes) or how many games do you want to play while learning? ";
         cin >> treeDepth;
         factory.DisplayEvaluationOptions();
         cout << "which evaluation function do you want to use ? ";
         cin >> evaluation;
+        cout << "If you are learning a model what do you want to save the model as/ what is the name of the model?";
     }
 
     // set up arrays for all of the values you want to be able to output

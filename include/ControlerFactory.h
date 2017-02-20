@@ -6,6 +6,7 @@
 #include <MinMax.h>
 #include <ExpectiMax.h>
 #include <Evaluation.h>
+#include <Reinforcement.h>
 
 class ControlerFactory
 {

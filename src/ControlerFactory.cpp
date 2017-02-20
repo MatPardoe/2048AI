@@ -29,6 +29,8 @@ Controler* ControlerFactory::GetControler(int choiceAlgorithm, int TreeDepth, in
         return new MinMax(TreeDepth, usedEvaluation);
     case 2:
         return new ExpectiMax(TreeDepth, usedEvaluation);
+    case 3:
+        return new Reinforcement(TreeDepth, "StateInfo.csv");
     default:
         return new RandomDirection();
     }
@@ -43,6 +45,7 @@ void ControlerFactory::DisplayOptions()
     std::cout << "0 = Random non-AI base class" << std::endl;
     std::cout << "1 = MinMax" << std::endl;
     std::cout << "2 = ExpectiMax" << std::endl;
+    std::cout << "3 = Reinforcement learning (q-learning)" << std::endl;
 
     std::cout << "All other Values default to the Random non-AI class" << std::endl;
 }
