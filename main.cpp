@@ -58,7 +58,8 @@ int main(int argc, char *argv[])
         factory.DisplayEvaluationOptions();
         cout << "which evaluation function do you want to use ? ";
         cin >> evaluation;
-        cout << "If you are learning a model what do you want to save the model as/ what is the name of the model?";
+        cout << "If you are learning a model what do you want to save the model as/ what is the name of the model? ";
+        cin >> stateName;
     }
 
     // set up arrays for all of the values you want to be able to output

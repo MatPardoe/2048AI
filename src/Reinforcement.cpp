@@ -6,28 +6,28 @@
 #include <iostream> //needed for cout
 #include <sstream> //needed of osstream
 #include <fstream> //needed for saving the file
+#include <math.h> //needed for log base 2
+
 
 Reinforcement::Reinforcement(int Games, std::string saveName)
 {
     //ctor
+    Load(saveName);
     Learning(Games);
     Save(saveName);
 }
 
 Direction Reinforcement::GetMove(Board board)
 {
-    //the value is currently always set to zero
-    //once I have worked out how I am storing the Q value
-    //of each state I will be setting the value using that
     Direction direction[4] = {Up, Right, Down, Left};
     bool highest[4] = {false, false, false, false};
-    double value= -1*std::numeric_limits<double>::min();
+    double value= -1*std::numeric_limits<double>::max();
     //get the value of each move
     for (int i=0; i<4; i++)
     {
         if(board.CanMakeMove(direction[i]))
         {
-            double tempValue = 0.0;
+            double tempValue = Q[ToState(board,direction[i])];
             if(tempValue>value)
             {
                 for(int j=0; j<i; j++)
@@ -90,20 +90,20 @@ void Reinforcement::Learning(int Games)
         while(board.CanMakeAMove())
         {
             moves++;
-            //store the current board
-            std::string state = Board2String(board);
-            //pick which move to make TODO: this bit
+            //pick which move to make
             Direction nextMove = GreedyPolicy(board, 0.9);
+            //store the current board
+            std::bitset<66> state = ToState(board, nextMove);
             //make move
             board.Move(nextMove);
             //record new data
-            double reward = moves;
+            double reward = moves;  //TODO: IMPROVE
             //update the value of Q(s,a), if Q(s,a) hasn't been picked before give it a default value (This is done in the max value function)
-            if(Q.count(state+Direction2String(nextMove))==0)
+            if(Q.count(state)==0)  //need to change
             {
-                Q.insert({state+Direction2String(nextMove),0});
+                Q.insert({state,0}); //need to change
             }
-            Q[state+Direction2String(nextMove)] = Q[state+Direction2String(nextMove)] + alpha*(reward + lambda*MaxValue(board) - Q[state+Direction2String(nextMove)]);
+            Q[state] = Q[state] + alpha*(reward + lambda*MaxValue(board) - Q[state]);
         }
         if(i%100 == 0)
         {
@@ -118,36 +118,46 @@ void Reinforcement::Learning(int Games)
     */
 }
 
-std::string Reinforcement::Board2String(Board board)
+std::bitset<66> Reinforcement::ToState(Board board, Direction direction)
 {
-    std::string boardString = "";
+    std::bitset<66> state;
     for(int i=0; i<4; i++)
     {
         for(int j=0; j<4; j++)
         {
-            std::ostringstream convert;
-            convert << board.GetBoard(i,j);
-            boardString = boardString + convert.str();
+            int pow2 = int(log2(board.GetBoard(i,j)));
+            std::bitset<4> temp (pow2);
+            int startPosition = 16*i + 4*j;
+            for(int k=startPosition; k<startPosition+4; k++)
+            {
+                if(temp[k-startPosition])
+                {
+                    state.set(k); //need to make sure it works
+                }
+            }
         }
     }
-    return boardString;
-}
-
-std::string Reinforcement::Direction2String(Direction direction)
-{
+    //last two bits of bitset indicate the direction
     switch (direction)
     {
     case Up:
-        return "Up";
+        //both bits zero
+        return state;
     case Right:
-        return "Right";
+        //first bit one
+        state.set(64);
+        return state;
     case Down:
-        return "Down";
+        //both bits one
+        state.set(64);
+        state.set(65);
+        return state;
     case Left:
-        return "Left";
-    default:
-        return "No Direction";
+        //second bit one
+        state.set(65);
+        return state;
     }
+    return state;
 }
 
 Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
@@ -166,18 +176,18 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
 
     std::vector<double> values;
     std::vector<Direction> directions;
-    std::string boardString = Board2String(board);
     //up
     if(board.CanMakeMove(Up))
     {
-        if(Q.count(boardString+Direction2String(Up))>0)
+        std::bitset<66> state = ToState(board, Up);
+        if(Q.count(state)>0)
         {
-            values.push_back(Q[boardString+Direction2String(Up)]);
+            values.push_back(Q[state]);
             directions.push_back(Up);
         }
         else
         {
-            Q.insert({boardString+Direction2String(Up),0});
+            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
             directions.push_back(Up);
         }
@@ -185,14 +195,15 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
     //right
     if(board.CanMakeMove(Right))
     {
-        if(Q.count(boardString+Direction2String(Right))>0)
+        std::bitset<66> state = ToState(board, Right);
+        if(Q.count(state)>0)
         {
-            values.push_back(Q[boardString+Direction2String(Right)]);
+            values.push_back(Q[state]);
             directions.push_back(Right);
         }
         else
         {
-            Q.insert({boardString+Direction2String(Right),0});
+            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
             directions.push_back(Right);
         }
@@ -200,14 +211,15 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
     //down
     if(board.CanMakeMove(Down))
     {
-        if(Q.count(boardString+Direction2String(Down))>0)
+        std::bitset<66> state = ToState(board, Down);
+        if(Q.count(state)>0)
         {
-            values.push_back(Q[boardString+Direction2String(Down)]);
+            values.push_back(Q[state]);
             directions.push_back(Down);
         }
         else
         {
-            Q.insert({boardString+Direction2String(Down),0});
+            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
             directions.push_back(Down);
         }
@@ -215,14 +227,15 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
     //left
     if(board.CanMakeMove(Left))
     {
-        if(Q.count(boardString+Direction2String(Left))>0)
+        std::bitset<66> state = ToState(board, Left);
+        if(Q.count(state)>0)
         {
-            values.push_back(Q[boardString+Direction2String(Left)]);
+            values.push_back(Q[state]);
             directions.push_back(Left);
         }
         else
         {
-            Q.insert({boardString+Direction2String(Left),0});
+            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
             directions.push_back(Left);
         }
@@ -257,60 +270,63 @@ double Reinforcement::MaxValue(Board board)
                 }
             }
         }
-        return largest-1024;
+        return largest-2048;
     }
     //find the best value
-    std::string boardString = Board2String(board);
     std::vector<double> values;
     //up
     if(board.CanMakeMove(Up))
     {
-        if(Q.count(boardString+Direction2String(Up))>0)
+        std::bitset<66> state = ToState(board, Up);
+        if(Q.count(state)>0)
         {
-            values.push_back(Q[boardString+Direction2String(Up)]);
+            values.push_back(Q[state]);
         }
         else
         {
-            Q.insert({boardString+Direction2String(Up),0});
+            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
         }
     }
     //right
     if(board.CanMakeMove(Right))
     {
-        if(Q.count(boardString+Direction2String(Right))>0)
+        std::bitset<66> state = ToState(board, Right);
+        if(Q.count(state)>0)
         {
-            values.push_back(Q[boardString+Direction2String(Right)]);
+            values.push_back(Q[state]);
         }
         else
         {
-            Q.insert({boardString+Direction2String(Right),0});
+            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
         }
     }
     //down
     if(board.CanMakeMove(Down))
     {
-        if(Q.count(boardString+Direction2String(Down))>0)
+        std::bitset<66> state = ToState(board, Down);
+        if(Q.count(state)>0)
         {
-            values.push_back(Q[boardString+Direction2String(Down)]);
+            values.push_back(Q[state]);
         }
         else
         {
-            Q.insert({boardString+Direction2String(Down),0});
+            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
         }
     }
     //left
     if(board.CanMakeMove(Left))
     {
-        if(Q.count(boardString+Direction2String(Left))>0)
+        std::bitset<66> state = ToState(board, Left);
+        if(Q.count(state)>0)
         {
-            values.push_back(Q[boardString+Direction2String(Left)]);
+            values.push_back(Q[state]);
         }
         else
         {
-            Q.insert({boardString+Direction2String(Left),0});
+            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
         }
     }
@@ -328,13 +344,49 @@ double Reinforcement::MaxValue(Board board)
 
 void Reinforcement::Save(std::string saveName)
 {
+    //need to empty the file before I do anything to it
     std::ofstream file;
-    file.open(saveName);
+    file.open(saveName); //removes anything currently in the file
     //iterate through the list
-    file << "words,\n";
     for( const auto& n : Q )
     {
-        file << n.first << "," << n.second << ",\n";
+        file << n.first << "," << n.second << ",\n";  //may need to be changed
     }
     file.close();
+}
+
+void Reinforcement::Load(std::string loadName)
+{
+    std::ifstream file;
+    file.open(loadName);
+    //assuming there is a file to load
+    if(file.is_open())
+    {
+        std::string line;
+        //go through each line adding the key and value
+        while(getline(file,line))
+        {
+            std::string strings[2];
+            std::stringstream ss(line);
+            int i = 0;
+            std::string token;
+            //split the string
+            while(getline(ss,token,',') and i<2)
+            {
+                strings[i]=token;
+                i++;
+            }
+            std::bitset<66> key (strings[0]);
+            double value = atof(strings[1].c_str());
+            Q.insert({key,value});
+        }
+        file.close();
+    }
+    //need to make sure this is doing what I expect
+    /*
+    for( const auto& n : Q )
+    {
+        std::cout << "Key:[" << n.first << "] Value:[" << n.second << "]\n";
+    }
+    */
 }

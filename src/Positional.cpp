@@ -63,7 +63,6 @@ double Positional::Evaluate(Board board)
             downValue = board.GetBoard(j,i);
         }
         //update score based on monoticity of the current rows using xor because if both at most two tiles in row not next to each other (adds risk as could be filled by a 2 or 4
-        //TODO make more intelligent, probably logging the values to make it less disproportionate
         if(acrossLarger xor acrossSmaller)
         {
             value = value * log(acrossLargest);

@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 #include <iostream>
+#include <bitset>
 
 
 class Reinforcement : public Controler
@@ -16,14 +17,13 @@ class Reinforcement : public Controler
     protected:
     private:
         void Learning(int Games);
-        std::string Board2String(Board board);
-        std::string Direction2String(Direction direction);
+        std::bitset<66> ToState(Board board, Direction direction); //change this
         double MaxValue(Board board);
         Direction GreedyPolicy(Board board, double epsilon);
         void Save(std::string saveName);
+        void Load(std::string loadName);
         //variables
-        //NO IDEA HOW I AM GOING TO STORE STUFF, maybe using a unorderedmap
-        std::unordered_map<std::string,int> Q;
+        std::unordered_map<std::bitset<66>,int> Q;
 
 };
 
