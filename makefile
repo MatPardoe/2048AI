@@ -1,24 +1,29 @@
 IDIR = include/
-CFLAGS= -I $(IDIR)
+CFLAGS= -std=c++11 -I $(IDIR)
 
-all: Tidy.o SmoothGreedy.o Positional.o Greedy.o MinMax.o ExpectiMax.o RandomDirection.o ControlerFactory.o Board.o main.cpp
+all: Tidy.o SmoothGreedy.o Positional.o Greedy.o MinMax.o ExpectiMax.o RandomDirection.o Reinforcement.o ControlerFactory.o Board.o main.cpp
 	g++ $(CFLAGS) main.cpp *.o -o 2048AI
 
 Board.o: src/Board.cpp include/Board.h
 	g++ -c $(CFLAGS) src/Board.cpp
 
-ControlerFactory.o: src/ControlerFactory.cpp include/ControlerFactory.h include/Greedy.h include/Positional.h include/Tidy.h include/SmoothGreedy.h include/Controler.h include/RandomDirection.h include/MinMax.h include/ExpectiMax.h include/Evaluation.h
+ControlerFactory.o: src/ControlerFactory.cpp include/ControlerFactory.h include/Greedy.h include/Positional.h include/Tidy.h include/SmoothGreedy.h include/Controler.h include/RandomDirection.h include/MinMax.h include/ExpectiMax.h include/Evaluation.h include/Reinforcement.h
 	g++ -c $(CFLAGS) src/ControlerFactory.cpp
 
+#controlers
 ExpectiMax.o: src/ExpectiMax.cpp include/ExpectiMax.h include/Controler.h include/Board.h include/Evaluation.h
 	g++ -c $(CFLAGS) src/ExpectiMax.cpp
 
 MinMax.o: src/MinMax.cpp include/MinMax.h include/Controler.h include/Board.h include/Evaluation.h
 	g++ -c $(CFLAGS) src/MinMax.cpp
 
+Reinforcement.o: src/Reinforcement.cpp include/Reinforcement.h include/Controler.h include/Board.h
+	g++ -c $(CFLAGS) src/Reinforcement.cpp
+
 RandomDirection.o: src/RandomDirection.cpp include/RandomDirection.h include/Controler.h include/Board.h
 	g++ -c $(CFLAGS) src/RandomDirection.cpp
 
+#evaluation functions
 Greedy.o: src/Greedy.cpp include/Greedy.h include/Board.h include/Evaluation.h
 	g++ -c $(CFLAGS) src/Greedy.cpp
 

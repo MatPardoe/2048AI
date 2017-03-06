@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     int maximum[games];
 
     // create the controler
-    Controler* controler = factory.GetControler(choice,treeDepth,evaluation);
+    Controler* controler = factory.GetControler(choice,treeDepth,evaluation,stateName);
 
     // run all the required games
     for (int i = 0; i < games; i++)

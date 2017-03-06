@@ -15,7 +15,7 @@ ControlerFactory::ControlerFactory()
 returns a pointer to the selected controler with the other settings
 such as the depth of trees generated and which evaluation to use
 */
-Controler* ControlerFactory::GetControler(int choiceAlgorithm, int TreeDepth, int choiceEvaluation)
+Controler* ControlerFactory::GetControler(int choiceAlgorithm, int TreeDepth, int choiceEvaluation, std::string stateName)
 {
     // get the correct evaluation class
     Evaluation* usedEvaluation = GetEvaluator(choiceEvaluation);
@@ -30,7 +30,7 @@ Controler* ControlerFactory::GetControler(int choiceAlgorithm, int TreeDepth, in
     case 2:
         return new ExpectiMax(TreeDepth, usedEvaluation);
     case 3:
-        return new Reinforcement(TreeDepth, "StateInfo.csv");
+        return new Reinforcement(TreeDepth, stateName);
     default:
         return new RandomDirection();
     }

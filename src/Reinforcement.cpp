@@ -80,24 +80,31 @@ do calculations to update the value of Q(s,a)
 void Reinforcement::Learning(int Games)
 {
     double alpha = 0.5; //the learning rate, set between 0 and 1
-    double lambda = 0.5; //discount factor, also set between 0 and 1
+    double lambda = 1; //discount factor, also set between 0 and 1
     //do reinforcement learning
     for(int i=0; i<Games; i++)
     {
-        int moves = 0;
         //play game
         Board board;
         while(board.CanMakeAMove())
         {
-            moves++;
             //pick which move to make
             Direction nextMove = GreedyPolicy(board, 0.9);
             //store the current board
             std::bitset<66> state = ToState(board, nextMove);
+            double reward = 0;
+            for(int j=0; j<4; j++)
+            {
+                for(int k=0; k<4; k++)
+                {
+                    if(board.GetBoard(j,k)==0)
+                    {
+                        reward = reward + 1;
+                    }
+                }
+            }
             //make move
             board.Move(nextMove);
-            //record new data
-            double reward = moves;  //TODO: IMPROVE
             //update the value of Q(s,a), if Q(s,a) hasn't been picked before give it a default value (This is done in the max value function)
             if(Q.count(state)==0)  //need to change
             {
