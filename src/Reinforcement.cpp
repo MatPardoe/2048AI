@@ -14,7 +14,7 @@ Reinforcement::Reinforcement(int Games, std::string saveName)
     //ctor
     Load(saveName);
     Learning(Games);
-    Save(saveName);
+    Save(saveName); //these files can get "quite" big
 }
 
 Direction Reinforcement::GetMove(Board board)
@@ -27,7 +27,11 @@ Direction Reinforcement::GetMove(Board board)
     {
         if(board.CanMakeMove(direction[i]))
         {
-            double tempValue = Q[ToState(board,direction[i])];
+            double tempValue = 0;
+            if(Q.count(ToState(board,direction[i])))
+            {
+                tempValue = Q[ToState(board,direction[i])];
+            }
             if(tempValue>value)
             {
                 for(int j=0; j<i; j++)
@@ -89,7 +93,7 @@ void Reinforcement::Learning(int Games)
         while(board.CanMakeAMove())
         {
             //pick which move to make
-            Direction nextMove = GreedyPolicy(board, 0.9);
+            Direction nextMove = GreedyPolicy(board, 0.1);
             //store the current board
             std::bitset<66> state = ToState(board, nextMove);
             double reward = 0;
@@ -106,9 +110,9 @@ void Reinforcement::Learning(int Games)
             //make move
             board.Move(nextMove);
             //update the value of Q(s,a), if Q(s,a) hasn't been picked before give it a default value (This is done in the max value function)
-            if(Q.count(state)==0)  //need to change
+            if(Q.count(state)==0)
             {
-                Q.insert({state,0}); //need to change
+                Q.insert({state,0});
             }
             Q[state] = Q[state] + alpha*(reward + lambda*MaxValue(board) - Q[state]);
         }
@@ -194,7 +198,6 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
         }
         else
         {
-            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
             directions.push_back(Up);
         }
@@ -210,7 +213,6 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
         }
         else
         {
-            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
             directions.push_back(Right);
         }
@@ -226,7 +228,6 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
         }
         else
         {
-            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
             directions.push_back(Down);
         }
@@ -242,7 +243,6 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
         }
         else
         {
-            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
             directions.push_back(Left);
         }
@@ -291,7 +291,6 @@ double Reinforcement::MaxValue(Board board)
         }
         else
         {
-            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
         }
     }
@@ -305,7 +304,6 @@ double Reinforcement::MaxValue(Board board)
         }
         else
         {
-            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
         }
     }
@@ -319,7 +317,6 @@ double Reinforcement::MaxValue(Board board)
         }
         else
         {
-            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
         }
     }
@@ -333,7 +330,6 @@ double Reinforcement::MaxValue(Board board)
         }
         else
         {
-            Q.insert({state,0});
             values.push_back(0); //initialised value of Q
         }
     }
