@@ -83,8 +83,8 @@ do calculations to update the value of Q(s,a)
 */
 void Reinforcement::Learning(int Games)
 {
-    double alpha = 0.5; //the learning rate, set between 0 and 1
-    double lambda = 1; //discount factor, also set between 0 and 1
+    double alpha = 0.1; //the learning rate, set between 0 and 1
+    double lambda = 0.5; //discount factor, also set between 0 and 1
     //do reinforcement learning
     for(int i=0; i<Games; i++)
     {
@@ -96,19 +96,9 @@ void Reinforcement::Learning(int Games)
             Direction nextMove = GreedyPolicy(board, 0.1);
             //store the current board
             std::bitset<66> state = ToState(board, nextMove);
-            double reward = 0;
-            for(int j=0; j<4; j++)
-            {
-                for(int k=0; k<4; k++)
-                {
-                    if(board.GetBoard(j,k)==0)
-                    {
-                        reward = reward + 1;
-                    }
-                }
-            }
             //make move
             board.Move(nextMove);
+            double reward = board.GetScore();
             //update the value of Q(s,a), if Q(s,a) hasn't been picked before give it a default value (This is done in the max value function)
             if(Q.count(state)==0)
             {
@@ -136,14 +126,17 @@ std::bitset<66> Reinforcement::ToState(Board board, Direction direction)
     {
         for(int j=0; j<4; j++)
         {
-            int pow2 = int(log2(board.GetBoard(i,j)));
-            std::bitset<4> temp (pow2);
-            int startPosition = 16*i + 4*j;
-            for(int k=startPosition; k<startPosition+4; k++)
+            if(board.GetBoard(i,j) != 0)
             {
-                if(temp[k-startPosition])
+                int pow2 = int(log2(board.GetBoard(i,j)));
+                std::bitset<4> temp (pow2);
+                int startPosition = 16*i + 4*j;
+                for(int k=startPosition; k<startPosition+4; k++)
                 {
-                    state.set(k); //need to make sure it works
+                    if(temp[k-startPosition])
+                    {
+                        state.set(k); //need to make sure it works
+                    }
                 }
             }
         }
@@ -263,21 +256,9 @@ Direction Reinforcement::GreedyPolicy(Board board, double epsilon)
 
 double Reinforcement::MaxValue(Board board)
 {
-    //need to handle when board is at the end of a game maybe give a score based on the largest tile - 2048
     if(not board.CanMakeAMove())
     {
-        int largest = 0;
-        for(int i=0; i<4; i++)
-        {
-            for(int j=0; j<4; j++)
-            {
-                if(board.GetBoard(i,j)>largest)
-                {
-                    largest = board.GetBoard(i,j);
-                }
-            }
-        }
-        return largest-2048;
+        return board.GetScore();
     }
     //find the best value
     std::vector<double> values;
