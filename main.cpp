@@ -77,6 +77,23 @@ int main(int argc, char *argv[])
     for (int i = 0; i < games; i++)
     {
         Board board;
+        //creating hard start position
+        board.AddTile(0,0,2);
+        board.AddTile(0,1,4);
+        board.AddTile(0,2,2);
+        board.AddTile(0,3,4);
+
+        board.AddTile(1,0,4);
+        board.AddTile(1,1,2);
+        board.AddTile(1,2,4);
+        board.AddTile(1,3,2);
+
+        board.AddTile(2,0,2);
+        board.AddTile(2,1,4);
+        board.AddTile(2,2,2);
+        board.AddTile(2,3,4);
+        //done creating hard start position
+
         time[i] = clock(); //start timer
         while (board.CanMakeAMove())
         {
