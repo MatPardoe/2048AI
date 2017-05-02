@@ -12,7 +12,7 @@ class ControlerFactory
 {
     public:
         ControlerFactory();
-        Controler* GetControler(int choiceAlgorithm, int TreeDepth, int choiceEvaluation, std::string stateName);
+        Controler* GetControler(int choiceAlgorithm, int TreeDepth, int choiceEvaluation, int learning, std::string stateName);
         void DisplayOptions();
         void DisplayEvaluationOptions();
     protected:

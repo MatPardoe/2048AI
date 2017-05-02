@@ -22,7 +22,10 @@ int main(int argc, char *argv[])
     int choice;
     int treeDepth;
     int evaluation;
+    int display;
+    int learning;
     string stateName;
+    int hard;
     ControlerFactory factory;
 
     //seed the random number generator
@@ -30,7 +33,7 @@ int main(int argc, char *argv[])
     time(&seconds);
     srand((unsigned int) seconds);
 
-    if( argc == 7)
+    if(argc == 10)
     {
         //this has no error handling and just assumes that you have done it correctly
         outputName = argv[1];
@@ -38,7 +41,10 @@ int main(int argc, char *argv[])
         choice = atoi(argv[3]);
         treeDepth = atoi(argv[4]);
         evaluation = atoi(argv[5]);
-        stateName = argv[6];
+        display = atoi(argv[6]);
+        learning = atoi(argv[7]);
+        stateName = argv[8];
+        hard = atoi(argv[9]);
     }
     else
     {
@@ -53,13 +59,19 @@ int main(int argc, char *argv[])
         factory.DisplayOptions();
         cout << "Which algorithm do you want to use ? ";
         cin >> choice;
-        cout << "If your chosen algorithm creates a tree how deep do you want it to go (the deeper you go the longer it takes) or how many games do you want to play while learning? ";
+        cout << "If your chosen algorithm creates a tree how deep do you want it to go (the deeper you go the longer it takes)? ";
         cin >> treeDepth;
         factory.DisplayEvaluationOptions();
         cout << "which evaluation function do you want to use ? ";
         cin >> evaluation;
+        cout << "1 to display boards, any other value not to ";
+        cin >> display;
+        cout << "How many games do you want to play while learning? ";
+        cin >> learning;
         cout << "If you are learning a model what do you want to save the model as/ what is the name of the model? ";
         cin >> stateName;
+        cout << "If you want to start in a challenging position select 1 ";
+        cin >> hard;
     }
 
     // set up arrays for all of the values you want to be able to output
@@ -71,33 +83,40 @@ int main(int argc, char *argv[])
     int maximum[games];
 
     // create the controler
-    Controler* controler = factory.GetControler(choice,treeDepth,evaluation,stateName);
+    Controler* controler = factory.GetControler(choice,treeDepth,evaluation,learning,stateName);
 
     // run all the required games
     for (int i = 0; i < games; i++)
     {
         Board board;
-        //creating hard start position
-        board.AddTile(0,0,2);
-        board.AddTile(0,1,4);
-        board.AddTile(0,2,2);
-        board.AddTile(0,3,4);
+        if(hard == 1)
+        {
+            //creating hard start position
+            board.AddTile(0,0,2);
+            board.AddTile(0,1,4);
+            board.AddTile(0,2,2);
+            board.AddTile(0,3,4);
 
-        board.AddTile(1,0,4);
-        board.AddTile(1,1,2);
-        board.AddTile(1,2,4);
-        board.AddTile(1,3,2);
+            board.AddTile(1,0,4);
+            board.AddTile(1,1,2);
+            board.AddTile(1,2,4);
+            board.AddTile(1,3,2);
 
-        board.AddTile(2,0,2);
-        board.AddTile(2,1,4);
-        board.AddTile(2,2,2);
-        board.AddTile(2,3,4);
-        //done creating hard start position
+            board.AddTile(2,0,2);
+            board.AddTile(2,1,4);
+            board.AddTile(2,2,2);
+            board.AddTile(2,3,4);
+            //done creating hard start position
+        }
 
         time[i] = clock(); //start timer
         while (board.CanMakeAMove())
         {
             board.Move((*controler).GetMove(board)); // passing the board is automatically copied instead of sharing the object
+            if(display==1)
+            {
+                board.DisplayBoard();
+            }
         }
         time[i] = clock()-time[i]; //get overall time for the game
         scores[i] = board.GetScore();
